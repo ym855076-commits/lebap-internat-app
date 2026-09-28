@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebap Internat - Sign Language App</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #042f2e, #0f766e, #0d9488);
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent-green: #059669;
+            --accent-light: #d1fae5;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --primary-blue: #2563eb;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .app-container {
+            width: 100%;
+            height: 100%;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header {
+            background: #ffffff;
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 2px solid #cbd5e1;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+        .header h2 {
+            font-size: 15px;
+            color: #065f46;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+        .header p {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 600;
+        }
+        .header-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .live-clock {
+            font-size: 11px;
+            font-weight: bold;
+            color: #0f766e;
+            background: #f0fdf4;
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            cursor: pointer;
+        }
+        .author-tag {
+            font-size: 10px;
+            font-weight: bold;
+            color: #047857;
+            background: #ecfdf5;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 3px;
+            border: 1px solid #a7f3d0;
+        }
+        .lang-switcher {
+            background: #0f766e;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-card {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+        .menu-card:hover { border-color: #0d9488; background: #f8fafc; }
+        .menu-card:active { transform: scale(0.98); }
+        .menu-card span {
+            font-weight: 700;
+            color: #0f766e;
+            font-size: 14px;
+        }
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        
+        .card-box {
+            background: white;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus { border-color: #0d9488; }
+        
+        .preview-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: none;
+            overflow: hidden;
+            border: 2px dashed #cbd5e1;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 3px 6px rgba(5, 150, 105, 0.25);
+            transition: opacity 0.2s;
+        }
+        .btn:active { opacity: 0.85; }
+        .btn-danger { background: var(--danger-color); box-shadow: 0 3px 6px rgba(220, 38, 38, 0.25); }
+        .btn-warning { background: var(--warning-color); box-shadow: 0 3px 6px rgba(217, 119, 6, 0.25); }
+        .btn-secondary { background: #475569; box-shadow: 0 3px 6px rgba(71, 85, 105, 0.25); }
+        .btn-blue { background: var(--primary-blue); box-shadow: 0 3px 6px rgba(37, 99, 235, 0.25); }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+        .grid-item {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px 4px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85px;
+            transition: transform 0.1s;
+        }
+        .grid-item:active { transform: scale(0.96); }
+        .grid-item img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+        .grid-item span { font-size: 15px; font-weight: bold; color: #047857; }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .map-container {
+            width: 100%;
+            flex-grow: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: #e2e8f0;
+            min-height: 250px;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО */
+        #letterModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            height: 90vh;
+            padding: 20px;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 4px solid var(--accent-green);
+        }
+        .modal-big-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #047857;
+            text-align: center;
+            line-height: 1.1;
+        }
+        .modal-preview-box {
+            position: relative;
+            width: 100%;
+            flex-grow: 1;
+            background: #f8fafc;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px dashed #cbd5e1;
+            margin: 10px 0;
+        }
+        .modal-preview-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            background: var(--accent-light);
+            border: 4px solid var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .score-circle h1 { color: #047857; margin: 0; font-size: 22px; }
+        .score-circle p { margin: 0; font-size: 11px; color: var(--text-muted); }
+        
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            padding: 6px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Шапка с живыми часами -->
+        <div class="header">
+            <div class="header-top-row">
+                <div class="live-clock" id="liveClock" onclick="switchScreen('screenTimer')">⏱️ 00:00:00</div>
+                <button class="lang-switcher" onclick="toggleLanguage()" id="langBtn">🇷🇺 RU / 🇹🇲 TK</button>
+            </div>
+            <h2 id="txtHeaderTitle">Lebap welaýatynyň 5-nji mekdep-internaty</h2>
+            <p id="txtHeaderSub">Ker we çala eşidýän çagalar üçin interaktiw esbap</p>
+            <div class="author-tag" id="txtAuthorTag">👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)</div>
+        </div>
+
+        <div class="content">
+
+            <!-- 1. ГЛАВНОЕ МЕНЮ -->
+            <div id="screenHome" class="screen active">
+                <div class="section-title" id="txtMenuTitle">Esasy Bölümler / Основные разделы</div>
+                
+                <div class="menu-card" onclick="switchScreen('screenAlphabet')">
+                    <span id="m1">📖 Türkmen Barmak Elipbiýi (A-Z)</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenDictionary')">
+                    <span id="m2">📚 Žestler Albomy we Sözlük</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenGame')">
+                    <span id="m3">🎮 Oýun we Barlag / Тесты и игра</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenCreator')">
+                    <span id="m4">➕ Kartoçka döretmek / Создать карточку</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenTimer')">
+                    <span id="m7">⏱️ Sapak wagty we Timer / Таймер уроков</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenMap')">
+                    <span id="m6">🗺️ Mekdebiň ýeri / Карта и школа</span>
+                    <span>➔</span>
+                </div>
+                <div class="menu-card" onclick="switchScreen('screenAbout')">
+                    <span id="m5">ℹ️ Programma barada / О программе</span>
+                    <span>➔</span>
+                </div>
+            </div>
+
+            <!-- 2. АЛФАВИТ -->
+            <div id="screenAlphabet" class="screen">
+                <div class="section-title" id="txtAlphaTitle">Türkmen Barmak Elipbiýi</div>
+                <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 4px 0; font-weight: 600;" id="txtAlphaHint">Harpa basyp uly ekranda görüň we sesli diňläň</p>
+                <input type="text" class="input-field" id="searchAlphaInput" placeholder="Harp gözle / Поиск буквы..." onkeyup="filterAlphabet(this.value)">
+                
+                <div class="grid-3" id="alphabetContainer"></div>
+                
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn1">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 3. АЛЬБОМ ЖЕСТОВ -->
+            <div id="screenDictionary" class="screen">
+                <div class="section-title" id="txtDictTitle">Žestler Albomy / Альбом жестов</div>
+                <input type="text" class="input-field" id="searchDictInput" placeholder="Söz gözle / Поиск слова..." onkeyup="filterDictionary(this.value)" style="margin-bottom: 4px;">
+                
+                <div class="categories-grid">
+                    <button class="btn btn-blue" onclick="openCategory('Mekdep')">🏫 Mekdep</button>
+                    <button class="btn btn-blue" onclick="openCategory('Maşgala')">👨‍👩‍👧‍👦 Maşgala</button>
+                    <button class="btn btn-blue" onclick="openCategory('Adam')">👤 Kim men / Человек</button>
+                    <button class="btn btn-blue" onclick="openCategory('Yurt')">🌍 Bizň ýurt / Страна</button>
+                    <button class="btn btn-blue" onclick="openCategory('Saglyk')">💊 Saglyk</button>
+                    <button class="btn btn-blue" onclick="openCategory('Duygular')">❤️ Duýgular</button>
+                    <button class="btn btn-blue" onclick="openCategory('Hereketler')" style="grid-column: span 2;">🏃 Hereketler / Действия</button>
+                </div>
+
+                <div class="card-box" style="padding: 6px; text-align: center; background: #e2e8f0; margin-bottom: 2px;">
+                    <span style="font-size: 12px; font-weight: 800; color: var(--text-main);" id="activeCatTitle">Mekdep</span>
+                </div>
+
+                <div class="grid-3" id="categoryItemsContainer"></div>
+
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn2">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 4. ИГРА И ТЕСТЫ -->
+            <div id="screenGame" class="screen">
+                <div class="section-title" id="txtGameTitle">Barlag Testi (Quiz)</div>
+                <div class="card-box" style="text-align: center; padding: 30px 20px;">
+                    <div class="score-circle">
+                        <h1 id="scoreValue">100</h1>
+                        <p id="txtScoreLabel">Bal / Очки</p>
+                    </div>
+                    <p style="font-size: 15px; margin: 15px 0; font-weight: bold;" id="txtQuestion">Bu haýsy jest? / Какой это жест?</p>
+                    <div class="action-row">
+                        <button class="btn" style="padding: 14px; font-size: 14px;" onclick="addScore(10)">Hawa / Да (+10)</button>
+                        <button class="btn btn-danger" style="padding: 14px; font-size: 14px;" onclick="addScore(-5)">Ýok / Нет (-5)</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn3">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 5. КОНСТРУКТОР КАРТОЧЕК -->
+            <div id="screenCreator" class="screen">
+                <div class="section-title" id="txtCreatorTitle">Kartoçka döretmek we Kamera</div>
+                <div class="card-box" style="flex-grow: 1;">
+                    <div class="action-row">
+                        <label class="btn" style="cursor: pointer; padding: 14px;">
+                            📁 <span id="lblGallery">Galereýa</span> 
+                            <input type="file" id="galleryInput" accept="image/*" style="display:none;" onchange="loadPhoto(event)">
+                        </label>
+                        <label class="btn btn-warning" style="cursor: pointer; padding: 14px;">
+                            📷 <span id="lblCamera">Kamera</span> 
+                            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="loadPhoto(event)">
+                        </label>
+                    </div>
+
+                    <div class="preview-container" id="previewBox" style="height: 160px;">
+                        <img id="cardImage" alt="Surat">
+                    </div>
+
+                    <div class="action-row" id="imageControls" style="display: none;">
+                        <button class="btn btn-secondary" style="padding: 10px;" onclick="rotateImage()">🔄 <span id="lblRotate">Öwr (90°)</span></button>
+                        <button class="btn btn-danger" style="padding: 10px;" onclick="deleteImage()">❌ <span id="lblDelete">Aýyr</span></button>
+                    </div>
+
+                    <input type="text" id="cardTitle" class="input-field" placeholder="Söz ýa-da harp / Слово или буква...">
+                    
+                    <div class="action-row" style="margin-top: auto;">
+                        <button class="btn" style="padding: 12px;" onclick="saveCard()">💾 <span id="lblSave">Ýatda sakla</span></button>
+                        <button class="btn btn-warning" style="padding: 12px;" onclick="downloadCard()">📥 <span id="lblDownload">Ýükle</span></button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn4">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 6. ТАЙМЕР И СЕКУНДОМЕР ДЛЯ УРОКОВ -->
+            <div id="screenTimer" class="screen">
+                <div class="section-title" id="txtTimerTitle">Sapak wagty we Timer / Таймер уроков</div>
+                <div class="card-box" style="text-align: center; gap: 15px; padding: 25px; flex-grow: 1; justify-content: center;">
+                    <div id="stopwatchDisplay" style="font-size: 42px; font-weight: 800; color: #047857; font-family: monospace;">00:00</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="txtTimerSub">Sapakda ýaryşmak ýa-da wagt barlamak üçin / Для заданий на уроке</p>
+                    <div class="action-row">
+                        <button class="btn" style="padding: 12px;" onclick="startStopwatch()">▶️ <span id="btnStart">Başla</span></button>
+                        <button class="btn btn-warning" style="padding: 12px;" onclick="pauseStopwatch()">⏸️ <span id="btnPause">Durandyr</span></button>
+                        <button class="btn btn-danger" style="padding: 12px; grid-column: span 2;" onclick="resetStopwatch()">🔄 <span id="btnReset">Täzeden başla</span></button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn7">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 7. ИНТЕРАКТИВНАЯ КАРТА -->
+            <div id="screenMap" class="screen">
+                <div class="section-title" id="txtMapTitle">Mekdebiň ýerleşýän ýeri / Карта Туркменабата</div>
+                <div class="map-container">
+                    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=63.54%2C39.08%2C63.62%2C39.15&amp;layer=mapnik" style="border: 0"></iframe>
+                </div>
+                <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin: 0;" id="txtMapSub">Türkmenabat şäheri • Lebap welaýaty</p>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn6">⬅️ Yzyna / Назад</button>
+            </div>
+
+            <!-- 8. О ПРОГРАММЕ -->
+            <div id="screenAbout" class="screen">
+                <div class="section-title" id="txtAboutTitle">Programma barada / О программе</div>
+                <div class="card-box" style="text-align: center; gap: 14px; padding: 25px; flex-grow: 1; justify-content: center;">
+                    <h3 style="color: #047857; margin: 0; font-size: 20px;">Lebap Internat App</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.6; margin: 0;" id="txtAboutDesc">
+                        Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.
+                    </p>
+                    <div style="background: var(--accent-light); padding: 14px; border-radius: 14px; border: 2px solid #a7f3d0;">
+                        <p style="margin: 0; font-size: 13px; font-weight: 800; color: #065f46;" id="txtAuthorName">👨‍🏫 Awtor / Автор: Mürzaew Ýusup (Terbiýeçi / Воспитатель)</p>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin: 5px 0 0 0; font-weight: 600;">Lebap Techno Hub • 2026</p>
+                </div>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn5">⬅️ Yzyna / Назад</button>
+            </div>
+
+        </div>
+
+        <div class="footer-note">
+            © 2026 Lebap Techno Hub • Türkmenabat
+        </div>
+    </div>
+
+    <!-- ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО -->
+    <div id="letterModal">
+        <div class="modal-box">
+            <div class="modal-big-title" id="modalBigTitle">A</div>
+            
+            <div class="modal-preview-box" id="modalPreviewBox">
+                <span id="modalPlaceholder" style="color: var(--text-muted); font-size: 14px; font-weight: 600;">Surat ýok / Нет фото жеста</span>
+                <img id="modalImage" alt="Jest" style="display: none;">
+            </div>
+
+            <div class="action-row">
+                <label class="btn" style="cursor: pointer; padding: 12px; font-size: 13px;">
+                    📁 <span id="mGal">Galereýa</span> <input type="file" accept="image/*" style="display:none;" onchange="loadModalPhoto(event)">
+                </label>
+                <label class="btn btn-warning" style="cursor: pointer; padding: 12px; font-size: 13px;">
+                    📷 <span id="mCam">Kamera</span> <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="loadModalPhoto(event)">
+                </label>
+            </div>
+
+            <div class="action-row" id="modalControls" style="display: none;">
+                <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="rotateModalImage()">🔄 <span id="mRot">Öwr</span></button>
+                <button class="btn btn-danger" style="padding: 10px; font-size: 13px;" onclick="deleteModalImage()">❌ <span id="mDel">Poz</span></button>
+            </div>
+
+            <div class="action-row">
+                <button class="btn" style="padding: 12px; font-size: 13px;" onclick="saveModalData()">💾 <span id="mSave">Sakla</span></button>
+                <button class="btn btn-secondary" style="padding: 12px; font-size: 13px;" onclick="closeLetterModal()">❌ <span id="mClose">Çykmak</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Живые часы
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('liveClock').innerText = `⏱️ ${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Секундомер для уроков
+        let swSeconds = 0;
+        let swInterval = null;
+        function startStopwatch() {
+            if (!swInterval) {
+                swInterval = setInterval(() => {
+                    swSeconds++;
+                    let m = Math.floor(swSeconds / 60);
+                    let s = swSeconds % 60;
+                    document.getElementById('stopwatchDisplay').innerText = 
+                        String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                }, 1000);
+            }
+        }
+        function pauseStopwatch() {
+            clearInterval(swInterval);
+            swInterval = null;
+        }
+        function resetStopwatch() {
+            pauseStopwatch();
+            swSeconds = 0;
+            document.getElementById('stopwatchDisplay').innerText = "00:00";
+        }
+
+        // Очки теста
+        let score = parseInt(localStorage.getItem('internatScore') || '100');
+        document.getElementById('scoreValue').innerText = score;
+        function addScore(points) {
+            score += points;
+            localStorage.setItem('internatScore', score);
+            document.getElementById('scoreValue').innerText = score;
+            alert(currentLang === 'tk' ? 'Jogabyňyz kabul edildi! 👍' : 'Ответ принят! 👍');
+        }
+
+        let currentRotation = 0;
+        let imageElement = document.getElementById('cardImage');
+        let currentLang = 'tk';
+
+        const alphabetLetters = ['A', 'Ä', 'B', 'Ç', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'Ž', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ö', 'P', 'R', 'S', 'Ş', 'T', 'U', 'Ü', 'W', 'Ý', 'Y', 'Z'];
+        let letterData = JSON.parse(localStorage.getItem('internatAlphabet') || '{}');
+        
+        const categoriesData = {
+            'Mekdep': ['Mugallym / Учитель', 'Direktor / Директор', 'Klas / Класс', 'Urok / Урок', 'Kitap / Книга', 'Oкуwчы / Ученик'],
+            'Maşgala': ['Ata / Отец', 'Eje / Мать', 'Aýal / Жена', 'Dogan / Сестра', 'Çaga / Ребенок', 'Agyz / Семья'],
+            'Adam': ['Men / Я', 'Adam / Человек', 'Erkek / Мужчина', 'Aýal / Женщина', 'Gyz / Девочка', 'Oglan / Мальчик'],
+            'Yurt': ['Watan / Родина', 'Şäher / Город', 'Oba / Деревня', 'Köçe / Улица', 'Baştutan / Президент'],
+            'Saglyk': ['Saglyk / Здоровье', 'Hassahana / Больница', 'Derman / Лекарство', 'Lukman / Врач', 'Agyrýar / Болит'],
+            'Duygular': ['Gowy / Хорошо', 'Erbet / Плохо', 'Begenmek / Радость', 'Gaharlanmak / Злость', 'Utanmak / Стыд'],
+            'Hereketler': ['Okamak / Читать', 'Ýazmak / Писать', 'Görmek / Видеть', 'Eşitmek / Слышать', 'Içmek / Пить', 'Iýmek / Есть']
+        };
+        let gestureData = JSON.parse(localStorage.getItem('internatGestures') || '{}');
+
+        let activeKey = '';
+        let isAlphabetMode = true;
+        let activeCategoryName = 'Mekdep';
+        let modalRotation = 0;
+        let modalImageSrc = '';
+
+        function renderAlphabetGrid() {
+            const container = document.getElementById('alphabetContainer');
+            container.innerHTML = '';
+            alphabetLetters.forEach(letter => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                const savedImg = letterData[letter] ? `<img src="${letterData[letter].img}" style="transform: rotate(${letterData[letter].rot || 0}deg);">` : '';
+                item.innerHTML = `${savedImg}<span>${letter}</span>`;
+                item.onclick = () => openModal(letter, true);
+                container.appendChild(item);
+            });
+        }
+
+        function openCategory(catName) {
+            isAlphabetMode = false;
+            activeCategoryName = catName;
+            document.getElementById('activeCatTitle').innerText = catName;
+            const container = document.getElementById('categoryItemsContainer');
+            container.innerHTML = '';
+            
+            if (categoriesData[catName]) {
+                categoriesData[catName].forEach(word => {
+                    const item = document.createElement('div');
+                    item.className = 'grid-item';
+                    const savedImg = gestureData[word] ? `<img src="${gestureData[word].img}" style="transform: rotate(${gestureData[word].rot || 0}deg);">` : '';
+                    item.innerHTML = `${savedImg}<span style="font-size:11px; line-height:1.2; font-weight:700;">${word}</span>`;
+                    item.onclick = () => openModal(word, false);
+                    container.appendChild(item);
+                });
+            }
+        }
+
+        function openModal(key, isAlpha) {
+            activeKey = key;
+            isAlphabetMode = isAlpha;
+            document.getElementById('modalBigTitle').innerText = key;
+            
+            speakText(key);
+
+            const mImg = document.getElementById('modalImage');
+            const mPlaceholder = document.getElementById('modalPlaceholder');
+            const mControls = document.getElementById('modalControls');
+
+            let currentStore = isAlpha ? letterData : gestureData;
+
+            if (currentStore[key] && currentStore[key].img) {
+                modalImageSrc = currentStore[key].img;
+                modalRotation = currentStore[key].rot || 0;
+                mImg.src = modalImageSrc;
+                mImg.style.display = 'block';
+                mImg.style.transform = `rotate(${modalRotation}deg)`;
+                mPlaceholder.style.display = 'none';
+                mControls.style.display = 'grid';
+            } else {
+                modalImageSrc = '';
+                modalRotation = 0;
+                mImg.src = '';
+                mImg.style.display = 'none';
+                mPlaceholder.style.display = 'block';
+                mControls.style.display = 'none';
+            }
+
+            document.getElementById('letterModal').style.display = 'flex';
+        }
+
+        function closeLetterModal() {
+            document.getElementById('letterModal').style.display = 'none';
+        }
+
+        function loadModalPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modalImageSrc = e.target.result;
+                    modalRotation = 0;
+                    const mImg = document.getElementById('modalImage');
+                    mImg.src = modalImageSrc;
+                    mImg.style.display = 'block';
+                    mImg.style.transform = `rotate(0deg)`;
+                    document.getElementById('modalPlaceholder').style.display = 'none';
+                    document.getElementById('modalControls').style.display = 'grid';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function rotateModalImage() {
+            modalRotation = (modalRotation + 90) % 360;
+            document.getElementById('modalImage').style.transform = `rotate(${modalRotation}deg)`;
+        }
+
+        function deleteModalImage() {
+            modalImageSrc = '';
+            modalRotation = 0;
+            const mImg = document.getElementById('modalImage');
+            mImg.src = '';
+            mImg.style.display = 'none';
+            document.getElementById('modalPlaceholder').style.display = 'block';
+            document.getElementById('modalControls').style.display = 'none';
+        }
+
+        function saveModalData() {
+            if (isAlphabetMode) {
+                if (modalImageSrc) {
+                    letterData[activeKey] = { img: modalImageSrc, rot: modalRotation };
+                } else {
+                    delete letterData[activeKey];
+                }
+                localStorage.setItem('internatAlphabet', JSON.stringify(letterData));
+                renderAlphabetGrid();
+            } else {
+                if (modalImageSrc) {
+                    gestureData[activeKey] = { img: modalImageSrc, rot: modalRotation };
+                } else {
+                    delete gestureData[activeKey];
+                }
+                localStorage.setItem('internatGestures', JSON.stringify(gestureData));
+                openCategory(activeCategoryName);
+            }
+            closeLetterModal();
+            alert(currentLang === 'tk' ? "Üstünlikli ýatda saklanyldy! ✅" : "Успешно сохранено! ✅");
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if(screenId === 'screenAlphabet') {
+                renderAlphabetGrid();
+            } else if(screenId === 'screenDictionary') {
+                openCategory('Mekdep');
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'tk' ? 'ru' : 'tk';
+            updateTexts();
+            renderAlphabetGrid();
+        }
+
+        function updateTexts() {
+            if (currentLang === 'ru') {
+                document.getElementById('langBtn').innerText = '🇹🇲 TK / 🇷🇺 RU';
+                document.getElementById('txtHeaderTitle').innerText = 'Спец. школа-интернат №5 Лебапского велаята';
+                document.getElementById('txtHeaderSub').innerText = 'Интерактивное пособие для глухих и слабослышащих';
+                document.getElementById('txtAuthorTag').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
+                document.getElementById('txtMenuTitle').innerText = 'Основные разделы';
+                document.getElementById('m1').innerText = '📖 Туркменский дактильный алфавит (А-Z)';
+                document.getElementById('m2').innerText = '📚 Альбом жестов и словарь';
+                document.getElementById('m3').innerText = '🎮 Мини-игры и тестирование';
+                document.getElementById('m4').innerText = '➕ Создать карточку и камера';
+                document.getElementById('m5').innerText = 'ℹ️ О программе';
+                document.getElementById('m6').innerText = '🗺️ Карта и школа';
+                document.getElementById('m7').innerText = '⏱️ Таймер уроков';
+                document.getElementById('txtAlphaTitle').innerText = 'Туркменский дактильный алфавит';
+                document.getElementById('txtAlphaHint').innerText = 'Нажмите на букву для просмотра и озвучивания';
+                document.getElementById('searchAlphaInput').placeholder = 'Поиск буквы...';
+                document.getElementById('searchDictInput').placeholder = 'Поиск слова...';
+                document.getElementById('txtDictTitle').innerText = 'Альбом жестов';
+                document.getElementById('txtCreatorTitle').innerText = 'Конструктор карточек и камера';
+                document.getElementById('txtMapTitle').innerText = 'Карта Туркменабата и школы';
+                document.getElementById('txtMapSub').innerText = 'Город Туркменабат • Лебапский велаят';
+                document.getElementById('txtTimerTitle').innerText = 'Таймер уроков и секундомер';
+                document.getElementById('txtTimerSub').innerText = 'Для заданий и соревнований на уроке';
+                document.getElementById('btnStart').innerText = 'Старт';
+                document.getElementById('btnPause').innerText = 'Пауза';
+                document.getElementById('btnReset').innerText = 'Сброс';
+                document.getElementById('lblGallery').innerText = 'Галерея';
+                document.getElementById('lblCamera').innerText = 'Камера';
+                document.getElementById('lblRotate').innerText = 'Поворот (90°)';
+                document.getElementById('lblDelete').innerText = 'Удалить';
+                document.getElementById('lblSave').innerText = 'Сохранить';
+                document.getElementById('lblDownload').innerText = 'Скачать';
+                document.getElementById('txtAboutTitle').innerText = 'О программе';
+                document.getElementById('txtAboutDesc').innerText = 'Это интерактивное учебное пособие разработано специально для учеников специальной общеобразовательной школы-интерната №5 Лебапского велаята.';
+                document.getElementById('txtAuthorName').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
+                document.getElementById('mGal').innerText = 'Галерея';
+                document.getElementById('mCam').innerText = 'Камера';
+                document.getElementById('mRot').innerText = 'Поворот';
+                document.getElementById('mDel').innerText = 'Удалить';
+                document.getElementById('mSave').innerText = 'Сохранить';
+                document.getElementById('mClose').innerText = 'Закрыть';
+                document.querySelectorAll('[id^="backBtn"]').forEach(btn => btn.innerText = '⬅️ Назад');
+            } else {
+                document.getElementById('langBtn').innerText = '🇷🇺 RU / 🇹🇲 TK';
+                document.getElementById('txtHeaderTitle').innerText = "Lebap welaýatynyň 5-nji mekdep-internaty";
+                document.getElementById('txtHeaderSub').innerText = "Ker we çala eşidýän çagalar üçin interaktiw esbap";
+                document.getElementById('txtAuthorTag').innerText = "👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)";
+                document.getElementById('txtMenuTitle').innerText = 'Esasy Bölümler';
+                document.getElementById('m1').innerText = '📖 Türkmen Barmak Elipbiýi (A-Z)';
+                document.getElementById('m2').innerText = '📚 Žestler Albomy we Sözlük';
+                document.getElementById('m3').innerText = '🎮 Oýun we Barlag (Quiz & Test)';
+                document.getElementById('m4').innerText = '➕ Täze Kartoçka Goşmak we Kamera';
+                document.getElementById('m5').innerText = 'ℹ️ Programma barada';
+                document.getElementById('m6').innerText = '🗺️ Mekdebiň ýeri we Karta';
+                document.getElementById('m7').innerText = '⏱️ Sapak wagty we Timer';
+                document.getElementById('txtAlphaTitle').innerText = 'Türkmen Barmak Elipbiýi';
+                document.getElementById('txtAlphaHint').innerText = 'Harpa basyp uly ekranda görüň we sesli diňläň';
+                document.getElementById('searchAlphaInput').placeholder = 'Harp gözle...';
+                document.getElementById('searchDictInput').placeholder = 'Söz gözle...';
+                document.getElementById('txtDictTitle').innerText = 'Žestler Albomy';
+                document.getElementById('txtCreatorTitle').innerText = 'Kartoçka Döretmek we Kamera';
+                document.getElementById('txtMapTitle').innerText = 'Türkmenabat şäheriniň karty';
+                document.getElementById('txtMapSub').innerText = 'Türkmenabat şäheri • Lebap welaýaty';
+                document.getElementById('txtTimerTitle').innerText = 'Sapak wagty we Timer';
+                document.getElementById('txtTimerSub').innerText = 'Sapakda ýaryşmak ýa-da wagt barlamak üçin';
+                document.getElementById('btnStart').innerText = 'Başla';
+                document.getElementById('btnPause').innerText = 'Durandyr';
+                document.getElementById('btnReset').innerText = 'Täzeden başla';
+                document.getElementById('lblGallery').innerText = 'Galereýa';
+                document.getElementById('lblCamera').innerText = 'Kamera';
+                document.getElementById('lblRotate').innerText = 'Öwr (90°)';
+                document.getElementById('lblDelete').innerText = 'Aýyr';
+                document.getElementById('lblSave').innerText = 'Ýatda sakla';
+                document.getElementById('lblDownload').innerText = 'Ýükle';
+                document.getElementById('txtAboutTitle').innerText = 'Programma barada';
+                document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
+                document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
+                document.getElementById('mGal').innerText = 'Galereýa';
+                document.getElementById('mCam').innerText = 'Kamera';
+                document.getElementById('mRot').innerText = 'Öwr';
+                document.getElementById('mDel').innerText = 'Poz';
+                document.getElementById('mSave').innerText = 'Sakla';
+                document.getElementById('mClose').innerText = 'Çykmak';
+                document.querySelectorAll('[id^="backBtn"]').forEach(btn => btn.innerText = '⬅️ Yzyna gaýt');
+            }
+        }
+
+        function loadPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageElement.src = e.target.result;
+                    currentRotation = 0;
+                    imageElement.style.transform = `rotate(0deg)`;
+                    document.getElementById('previewBox').style.display = 'flex';
+                    document.getElementById('imageControls').style.display = 'grid';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function rotateImage() {
+            currentRotation = (currentRotation + 90) % 360;
+            imageElement.style.transform = `rotate(${currentRotation}deg)`;
+        }
+
+        function deleteImage() {
+            imageElement.src = '';
+            document.getElementById('previewBox').style.display = 'none';
+            document.getElementById('imageControls').style.display = 'none';
+            document.getElementById('galleryInput').value = '';
+            document.getElementById('cameraInput').value = '';
+        }
+
+        function saveCard() {
+            const title = document.getElementById('cardTitle').value;
+            if(!title) {
+                alert(currentLang === 'tk' ? "Sözüň adyny ýazyň!" : "Введите название слова/буквы!");
+                return;
+            }
+            alert(currentLang === 'tk' ? "Kartoçka üstünlikli ýatda saklanyldy! ✅" : "Карточка успешно сохранена! ✅");
+            document.getElementById('cardTitle').value = '';
+            deleteImage();
+        }
+
+        function downloadCard() {
+            if(!imageElement.src) {
+                alert(currentLang === 'tk' ? "Ilki bilen surat saýlaň ýa-da alyn!" : "Сначала выберите или сделайте фото!");
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = 'turkmen-jest-kartoçka.png';
+            link.href = imageElement.src;
+            link.click();
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const cleanText = text.split('/')[0].trim();
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = currentLang === 'tk' ? 'tk-TM' : 'ru-RU';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function filterAlphabet(query) {
+            const items = document.querySelectorAll('#alphabetContainer .grid-item');
+            items.forEach(item => {
+                const text = item.querySelector('span').innerText;
+                item.style.display = text.toLowerCase().includes(query.toLowerCase()) ? 'flex' : 'none';
+            });
+        }
+
+        function filterDictionary(query) {
+            const items = document.querySelectorAll('#categoryItemsContainer .grid-item');
+            items.forEach(item => {
+                const text = item.querySelector('span').innerText;
+                item.style.display = text.toLowerCase().includes(query.toLowerCase()) ? 'flex' : 'none';
+            });
+        }
+
+        window.onload = function() {
+            renderAlphabetGrid();
+        }
+    </script>
+
+</body>
+</html>
