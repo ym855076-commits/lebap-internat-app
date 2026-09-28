@@ -171,6 +171,7 @@
             border: 2px dashed #cbd5e1;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
         .preview-container img {
             max-width: 100%;
@@ -254,7 +255,7 @@
             border: 2px solid #cbd5e1;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             background: #e2e8f0;
-            min-height: 250px;
+            min-height: 280px;
         }
         .map-container iframe {
             width: 100%;
@@ -262,7 +263,7 @@
             border: none;
         }
 
-        /* ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО */
+        /* ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ/ПРОСМОТРА ЖЕСТА */
         #letterModal {
             display: none;
             position: fixed;
@@ -306,6 +307,7 @@
             overflow: hidden;
             border: 3px dashed #cbd5e1;
             margin: 10px 0;
+            cursor: pointer;
         }
         .modal-preview-box img {
             max-width: 100%;
@@ -314,9 +316,41 @@
             transition: transform 0.3s ease;
         }
 
+        /* ПОЛНОЭКРАННЫЙ ЗУМ ДЛЯ ЛЮБОЙ КАРТИНКИ / QR-КОДА */
+        #zoomModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        #zoomModal img {
+            max-width: 95%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 3px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .close-zoom {
+            margin-top: 15px;
+            background: white;
+            color: #0f172a;
+            border: none;
+            padding: 10px 25px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
         .score-circle {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             background: var(--accent-light);
             border: 4px solid var(--accent-green);
             border-radius: 50%;
@@ -326,8 +360,8 @@
             justify-content: center;
             margin: 0 auto;
         }
-        .score-circle h1 { color: #047857; margin: 0; font-size: 22px; }
-        .score-circle p { margin: 0; font-size: 11px; color: var(--text-muted); }
+        .score-circle h1 { color: #047857; margin: 0; font-size: 20px; }
+        .score-circle p { margin: 0; font-size: 10px; color: var(--text-muted); }
         
         .footer-note {
             text-align: center;
@@ -370,7 +404,7 @@
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenGame')">
-                    <span id="m3">🎮 Oýun we Barlag / Тесты и игра</span>
+                    <span id="m3">🎮 Oýun we Barlag / Мини-игра и тест</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenCreator')">
@@ -426,19 +460,24 @@
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn2">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 4. ИГРА И ТЕСТЫ -->
+            <!-- 4. ИГРА И МИНИ-ТЕСТ -->
             <div id="screenGame" class="screen">
-                <div class="section-title" id="txtGameTitle">Barlag Testi (Quiz)</div>
-                <div class="card-box" style="text-align: center; padding: 30px 20px;">
+                <div class="section-title" id="txtGameTitle">Barlag Testi we Oýun / Мини-игра</div>
+                <div class="card-box" style="text-align: center; padding: 20px; gap: 12px; flex-grow: 1; justify-content: center;">
                     <div class="score-circle">
                         <h1 id="scoreValue">100</h1>
                         <p id="txtScoreLabel">Bal / Очки</p>
                     </div>
-                    <p style="font-size: 15px; margin: 15px 0; font-weight: bold;" id="txtQuestion">Bu haýsy jest? / Какой это жест?</p>
-                    <div class="action-row">
-                        <button class="btn" style="padding: 14px; font-size: 14px;" onclick="addScore(10)">Hawa / Да (+10)</button>
-                        <button class="btn btn-danger" style="padding: 14px; font-size: 14px;" onclick="addScore(-5)">Ýok / Нет (-5)</button>
+                    
+                    <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 14px; padding: 10px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+                        <span id="gameQuestionText" style="font-size: 16px; font-weight: bold; color: #047857;">Bu haýsy söz?</span>
                     </div>
+
+                    <div id="gameOptionsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <!-- Кнопки вариантов игры динамические -->
+                    </div>
+                    
+                    <button class="btn btn-warning" style="padding: 8px; font-size: 12px;" onclick="nextGameQuestion()">🔄 <span id="txtNextQ">Başga sorag / Следующий вопрос</span></button>
                 </div>
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn3">⬅️ Yzyna / Назад</button>
             </div>
@@ -458,9 +497,10 @@
                         </label>
                     </div>
 
-                    <div class="preview-container" id="previewBox" style="height: 160px;">
+                    <div class="preview-container" id="previewBox" onclick="openZoom(imageElement.src)">
                         <img id="cardImage" alt="Surat">
                     </div>
+                    <p style="font-size: 9px; text-align: center; color: var(--text-muted); margin: 0;" id="txtZoomHint">Surata basyp uly ekranda görüň 🔍</p>
 
                     <div class="action-row" id="imageControls" style="display: none;">
                         <button class="btn btn-secondary" style="padding: 10px;" onclick="rotateImage()">🔄 <span id="lblRotate">Öwr (90°)</span></button>
@@ -494,25 +534,24 @@
 
             <!-- 7. ИНТЕРАКТИВНАЯ КАРТА -->
             <div id="screenMap" class="screen">
-                <div class="section-title" id="txtMapTitle">Mekdebiň ýerleşýän ýeri / Карта Туркменабата</div>
+                <div class="section-title" id="txtMapTitle">Mekdebiň ýerleşýän ýeri / Карта и школа</div>
                 <div class="map-container">
-                    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=63.54%2C39.08%2C63.62%2C39.15&amp;layer=mapnik" style="border: 0"></iframe>
+                    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=63.565%2C39.105%2C63.595%2C39.125&amp;layer=mapnik" style="border: 0"></iframe>
                 </div>
-                <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin: 0;" id="txtMapSub">Türkmenabat şäheri • Lebap welaýaty</p>
+                <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin: 0;" id="txtMapSub">Türkmenabat şäheri • Mekdep töweregi</p>
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn6">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 8. О ПРОГРАММЕ (С ДОБАВЛЕННЫМ QR-КОДОМ) -->
+            <!-- 8. О ПРОГРАММЕ -->
             <div id="screenAbout" class="screen">
                 <div class="section-title" id="txtAboutTitle">Programma barada / О программе</div>
                 <div class="card-box" style="text-align: center; gap: 10px; padding: 16px; flex-grow: 1; justify-content: center; align-items: center;">
                     <h3 style="color: #047857; margin: 0; font-size: 18px;">Lebap Internat App</h3>
                     
-                    <!-- Отображение вашего QR-кода -->
-                    <div style="background: white; padding: 8px; border-radius: 12px; border: 2px solid #cbd5e1; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 8px; border-radius: 12px; border: 2px solid #cbd5e1; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="openZoom('qrcode.png')">
                         <img src="qrcode.png" alt="QR Kod" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                     </div>
-                    <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;" id="txtQrHint">Kamera bilen skanirläň / Сканируйте для открытия</p>
+                    <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;" id="txtQrHint">QR-a basyp uly ekranda görüň / Нажмите для увеличения</p>
 
                     <p style="font-size: 12px; color: var(--text-main); line-height: 1.4; margin: 0;" id="txtAboutDesc">
                         Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.
@@ -532,12 +571,12 @@
         </div>
     </div>
 
-    <!-- ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО -->
+    <!-- ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ЖЕСТОВ -->
     <div id="letterModal">
         <div class="modal-box">
             <div class="modal-big-title" id="modalBigTitle">A</div>
             
-            <div class="modal-preview-box" id="modalPreviewBox">
+            <div class="modal-preview-box" id="modalPreviewBox" onclick="if(modalImageSrc) openZoom(modalImageSrc)">
                 <span id="modalPlaceholder" style="color: var(--text-muted); font-size: 14px; font-weight: 600;">Surat ýok / Нет фото жеста</span>
                 <img id="modalImage" alt="Jest" style="display: none;">
             </div>
@@ -561,6 +600,12 @@
                 <button class="btn btn-secondary" style="padding: 12px; font-size: 13px;" onclick="closeLetterModal()">❌ <span id="mClose">Çykmak</span></button>
             </div>
         </div>
+    </div>
+
+    <!-- ОКНО УВЕЛИЧЕНИЯ (ЗУМА) КАРТИНОК И QR-КОДА -->
+    <div id="zoomModal" onclick="closeZoom()">
+        <img id="zoomImage" src="" alt="Uly surat">
+        <button class="close-zoom" onclick="closeZoom()">❌ Ýapmak / Закрыть</button>
     </div>
 
     <script>
@@ -599,11 +644,42 @@
 
         let score = parseInt(localStorage.getItem('internatScore') || '100');
         document.getElementById('scoreValue').innerText = score;
-        function addScore(points) {
-            score += points;
-            localStorage.setItem('internatScore', score);
-            document.getElementById('scoreValue').innerText = score;
-            alert(currentLang === 'tk' ? 'Jogabyňyz kabul edildi! 👍' : 'Ответ принят! 👍');
+
+        function nextGameQuestion() {
+            const allKeys = [...alphabetLetters, ...Object.values(categoriesData).flat()];
+            const randomKey = allKeys[Math.floor(Math.random() * allKeys.length)];
+            document.getElementById('gameQuestionText').innerText = (currentLang === 'tk' ? "Bu sözüň / harpyň manysyny tap: " : "Найдите значение: ") + randomKey;
+            
+            const optionsContainer = document.getElementById('gameOptionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            let options = [randomKey];
+            while(options.length < 4) {
+                let fakeKey = allKeys[Math.floor(Math.random() * allKeys.length)];
+                if(!options.includes(fakeKey)) options.push(fakeKey);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-blue';
+                btn.style.padding = '10px';
+                btn.style.fontSize = '12px';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if(opt === randomKey) {
+                        score += 10;
+                        alert(currentLang === 'tk' ? "Dogry! Ajaýyp! +10 bal 🌟" : "Правильно! Отлично! +10 очков 🌟");
+                    } else {
+                        score = Math.max(0, score - 5);
+                        alert(currentLang === 'tk' ? "Ýalňyş! Synanyşyp gör ❌" : "Неправильно! Попробуйте еще ❌");
+                    }
+                    localStorage.setItem('internatScore', score);
+                    document.getElementById('scoreValue').innerText = score;
+                    nextGameQuestion();
+                };
+                optionsContainer.appendChild(btn);
+            });
         }
 
         let currentRotation = 0;
@@ -629,6 +705,16 @@
         let activeCategoryName = 'Mekdep';
         let modalRotation = 0;
         let modalImageSrc = '';
+
+        function openZoom(src) {
+            if(!src) return;
+            document.getElementById('zoomImage').src = src;
+            document.getElementById('zoomModal').style.display = 'flex';
+        }
+
+        function closeZoom() {
+            document.getElementById('zoomModal').style.display = 'none';
+        }
 
         function renderAlphabetGrid() {
             const container = document.getElementById('alphabetContainer');
@@ -761,6 +847,8 @@
                 renderAlphabetGrid();
             } else if(screenId === 'screenDictionary') {
                 openCategory('Mekdep');
+            } else if(screenId === 'screenGame') {
+                nextGameQuestion();
             }
         }
 
@@ -779,7 +867,7 @@
                 document.getElementById('txtMenuTitle').innerText = 'Основные разделы';
                 document.getElementById('m1').innerText = '📖 Туркменский дактильный алфавит (А-Z)';
                 document.getElementById('m2').innerText = '📚 Альбом жестов и словарь';
-                document.getElementById('m3').innerText = '🎮 Мини-игры и тестирование';
+                document.getElementById('m3').innerText = '🎮 Мини-игра и тестирование';
                 document.getElementById('m4').innerText = '➕ Создать карточку и камера';
                 document.getElementById('m5').innerText = 'ℹ️ О программе';
                 document.getElementById('m6').innerText = '🗺️ Карта и школа';
@@ -791,9 +879,11 @@
                 document.getElementById('txtDictTitle').innerText = 'Альбом жестов';
                 document.getElementById('txtCreatorTitle').innerText = 'Конструктор карточек и камера';
                 document.getElementById('txtMapTitle').innerText = 'Карта Туркменабата и школы';
-                document.getElementById('txtMapSub').innerText = 'Город Туркменабат • Лебапский велаят';
+                document.getElementById('txtMapSub').innerText = 'Город Туркменабат • Территория школы';
                 document.getElementById('txtTimerTitle').innerText = 'Таймер уроков и секундомер';
                 document.getElementById('txtTimerSub').innerText = 'Для заданий и соревнований на уроке';
+                document.getElementById('txtGameTitle').innerText = 'Мини-игра и тест';
+                document.getElementById('txtNextQ').innerText = 'Следующий вопрос';
                 document.getElementById('btnStart').innerText = 'Старт';
                 document.getElementById('btnPause').innerText = 'Пауза';
                 document.getElementById('btnReset').innerText = 'Сброс';
@@ -804,7 +894,7 @@
                 document.getElementById('lblSave').innerText = 'Сохранить';
                 document.getElementById('lblDownload').innerText = 'Скачать';
                 document.getElementById('txtAboutTitle').innerText = 'О программе';
-                document.getElementById('txtQrHint').innerText = 'Сканируйте для открытия';
+                document.getElementById('txtQrHint').innerText = 'Нажмите для увеличения';
                 document.getElementById('txtAboutDesc').innerText = 'Это интерактивное учебное пособие разработано специально для учеников специальной общеобразовательной школы-интерната №5 Лебапского велаята.';
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
                 document.getElementById('mGal').innerText = 'Галерея';
@@ -834,9 +924,11 @@
                 document.getElementById('txtDictTitle').innerText = 'Žestler Albomy';
                 document.getElementById('txtCreatorTitle').innerText = 'Kartoçka Döretmek we Kamera';
                 document.getElementById('txtMapTitle').innerText = 'Türkmenabat şäheriniň karty';
-                document.getElementById('txtMapSub').innerText = 'Türkmenabat şäheri • Lebap welaýaty';
+                document.getElementById('txtMapSub').innerText = 'Türkmenabat şäheri • Mekdep töweregi';
                 document.getElementById('txtTimerTitle').innerText = 'Sapak wagty we Timer';
                 document.getElementById('txtTimerSub').innerText = 'Sapakda ýaryşmak ýa-da wagt barlamak üçin';
+                document.getElementById('txtGameTitle').innerText = 'Barlag Testi we Oýun';
+                document.getElementById('txtNextQ').innerText = 'Başga sorag';
                 document.getElementById('btnStart').innerText = 'Başla';
                 document.getElementById('btnPause').innerText = 'Durandyr';
                 document.getElementById('btnReset').innerText = 'Täzeden başla';
@@ -847,7 +939,7 @@
                 document.getElementById('lblSave').innerText = 'Ýatda sakla';
                 document.getElementById('lblDownload').innerText = 'Ýükle';
                 document.getElementById('txtAboutTitle').innerText = 'Programma barada';
-                document.getElementById('txtQrHint').innerText = 'Kamera bilen skanirläň';
+                document.getElementById('txtQrHint').innerText = 'QR-a basyp uly ekranda görüň';
                 document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
                 document.getElementById('mGal').innerText = 'Galereýa';
