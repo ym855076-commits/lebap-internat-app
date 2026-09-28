@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lebap Internat - Sign Language App</title>
+    <!-- Встроенный манифест для установки на главный экран телефона -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Lebap Internat App","short_name":"LebapApp","start_url":".","display":"standalone","background_color":"#0f766e","theme_color":"#0f766e"}'>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #042f2e, #0f766e, #0d9488);
@@ -500,18 +502,25 @@
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn6">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 8. О ПРОГРАММЕ -->
+            <!-- 8. О ПРОГРАММЕ (С ДОБАВЛЕННЫМ QR-КОДОМ) -->
             <div id="screenAbout" class="screen">
                 <div class="section-title" id="txtAboutTitle">Programma barada / О программе</div>
-                <div class="card-box" style="text-align: center; gap: 14px; padding: 25px; flex-grow: 1; justify-content: center;">
-                    <h3 style="color: #047857; margin: 0; font-size: 20px;">Lebap Internat App</h3>
-                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.6; margin: 0;" id="txtAboutDesc">
+                <div class="card-box" style="text-align: center; gap: 10px; padding: 16px; flex-grow: 1; justify-content: center; align-items: center;">
+                    <h3 style="color: #047857; margin: 0; font-size: 18px;">Lebap Internat App</h3>
+                    
+                    <!-- Отображение вашего QR-кода -->
+                    <div style="background: white; padding: 8px; border-radius: 12px; border: 2px solid #cbd5e1; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;">
+                        <img src="qrcode.png" alt="QR Kod" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;" id="txtQrHint">Kamera bilen skanirläň / Сканируйте для открытия</p>
+
+                    <p style="font-size: 12px; color: var(--text-main); line-height: 1.4; margin: 0;" id="txtAboutDesc">
                         Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.
                     </p>
-                    <div style="background: var(--accent-light); padding: 14px; border-radius: 14px; border: 2px solid #a7f3d0;">
-                        <p style="margin: 0; font-size: 13px; font-weight: 800; color: #065f46;" id="txtAuthorName">👨‍🏫 Awtor / Автор: Mürzaew Ýusup (Terbiýeçi / Воспитатель)</p>
+                    <div style="background: var(--accent-light); padding: 10px; border-radius: 12px; border: 2px solid #a7f3d0; width: 100%;">
+                        <p style="margin: 0; font-size: 12px; font-weight: 800; color: #065f46;" id="txtAuthorName">👨‍🏫 Awtor / Автор: Mürzaew Ýusup (Terbiýeçi / Воспитатель)</p>
                     </div>
-                    <p style="font-size: 11px; color: var(--text-muted); margin: 5px 0 0 0; font-weight: 600;">Lebap Techno Hub • 2026</p>
+                    <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;">Lebap Techno Hub • 2026</p>
                 </div>
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn5">⬅️ Yzyna / Назад</button>
             </div>
@@ -555,7 +564,6 @@
     </div>
 
     <script>
-        // Живые часы
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -566,7 +574,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Секундомер для уроков
         let swSeconds = 0;
         let swInterval = null;
         function startStopwatch() {
@@ -590,7 +597,6 @@
             document.getElementById('stopwatchDisplay').innerText = "00:00";
         }
 
-        // Очки теста
         let score = parseInt(localStorage.getItem('internatScore') || '100');
         document.getElementById('scoreValue').innerText = score;
         function addScore(points) {
@@ -798,6 +804,7 @@
                 document.getElementById('lblSave').innerText = 'Сохранить';
                 document.getElementById('lblDownload').innerText = 'Скачать';
                 document.getElementById('txtAboutTitle').innerText = 'О программе';
+                document.getElementById('txtQrHint').innerText = 'Сканируйте для открытия';
                 document.getElementById('txtAboutDesc').innerText = 'Это интерактивное учебное пособие разработано специально для учеников специальной общеобразовательной школы-интерната №5 Лебапского велаята.';
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
                 document.getElementById('mGal').innerText = 'Галерея';
@@ -840,6 +847,7 @@
                 document.getElementById('lblSave').innerText = 'Ýatda sakla';
                 document.getElementById('lblDownload').innerText = 'Ýükle';
                 document.getElementById('txtAboutTitle').innerText = 'Programma barada';
+                document.getElementById('txtQrHint').innerText = 'Kamera bilen skanirläň';
                 document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
                 document.getElementById('mGal').innerText = 'Galereýa';
@@ -887,7 +895,7 @@
                 return;
             }
             alert(currentLang === 'tk' ? "Kartoçka üstünlikli ýatda saklanyldy! ✅" : "Карточка успешно сохранена! ✅");
-            document.getElementById('cardTitle').value = '';
+            document.getElementById('cardTitle'.value = '';
             deleteImage();
         }
 
