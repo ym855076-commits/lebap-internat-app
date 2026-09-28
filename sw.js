@@ -1,8 +1,7 @@
-const CACHE_NAME = 'lebap-internat-v2';
+const CACHE_NAME = 'lebap-internat-v3';
 const assetsToCache = [
   './index.html',
   './manifest.json',
-  './icon.png',
   './qrcode.png'
 ];
 
