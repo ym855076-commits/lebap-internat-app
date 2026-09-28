@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lebap Internat - Sign Language App</title>
-    <!-- Встроенный манифест для установки на главный экран телефона -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Lebap Internat App","short_name":"LebapApp","start_url":".","display":"standalone","background_color":"#0f766e","theme_color":"#0f766e"}'>
+    <!-- Подключение полноценного манифеста для установки приложения -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f766e">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #042f2e, #0f766e, #0d9488);
@@ -263,7 +264,6 @@
             border: none;
         }
 
-        /* ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ/ПРОСМОТРА ЖЕСТА */
         #letterModal {
             display: none;
             position: fixed;
@@ -316,7 +316,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* ПОЛНОЭКРАННЫЙ ЗУМ ДЛЯ ЛЮБОЙ КАРТИНКИ / QR-КОДА */
         #zoomModal {
             display: none;
             position: fixed;
@@ -378,7 +377,6 @@
 <body>
 
     <div class="app-container">
-        <!-- Шапка с живыми часами -->
         <div class="header">
             <div class="header-top-row">
                 <div class="live-clock" id="liveClock" onclick="switchScreen('screenTimer')">⏱️ 00:00:00</div>
@@ -473,9 +471,7 @@
                         <span id="gameQuestionText" style="font-size: 16px; font-weight: bold; color: #047857;">Bu haýsy söz?</span>
                     </div>
 
-                    <div id="gameOptionsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <!-- Кнопки вариантов игры динамические -->
-                    </div>
+                    <div id="gameOptionsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
                     
                     <button class="btn btn-warning" style="padding: 8px; font-size: 12px;" onclick="nextGameQuestion()">🔄 <span id="txtNextQ">Başga sorag / Следующий вопрос</span></button>
                 </div>
@@ -517,7 +513,7 @@
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn4">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 6. ТАЙМЕР И СЕКУНДОМЕР ДЛЯ УРОКОВ -->
+            <!-- 6. ТАЙМЕР И СЕКУНДОМЕР -->
             <div id="screenTimer" class="screen">
                 <div class="section-title" id="txtTimerTitle">Sapak wagty we Timer / Таймер уроков</div>
                 <div class="card-box" style="text-align: center; gap: 15px; padding: 25px; flex-grow: 1; justify-content: center;">
@@ -532,7 +528,7 @@
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn7">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 7. ИНТЕРАКТИВНАЯ КАРТА -->
+            <!-- 7. КАРТА -->
             <div id="screenMap" class="screen">
                 <div class="section-title" id="txtMapTitle">Mekdebiň ýerleşýän ýeri / Карта и школа</div>
                 <div class="map-container">
@@ -571,7 +567,7 @@
         </div>
     </div>
 
-    <!-- ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ЖЕСТОВ -->
+    <!-- МОДАЛЬНОЕ ОКНО ЖЕСТОВ -->
     <div id="letterModal">
         <div class="modal-box">
             <div class="modal-big-title" id="modalBigTitle">A</div>
@@ -602,13 +598,22 @@
         </div>
     </div>
 
-    <!-- ОКНО УВЕЛИЧЕНИЯ (ЗУМА) КАРТИНОК И QR-КОДА -->
+    <!-- ЗУМ КАРТИНОК И QR -->
     <div id="zoomModal" onclick="closeZoom()">
         <img id="zoomImage" src="" alt="Uly surat">
         <button class="close-zoom" onclick="closeZoom()">❌ Ýapmak / Закрыть</button>
     </div>
 
     <script>
+        // Регистрация Service Worker для работы оффлайн
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log("Service Worker registered!"))
+                    .catch((err) => console.log("Service Worker failed:", err));
+            });
+        }
+
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -942,7 +947,7 @@
                 document.getElementById('txtQrHint').innerText = 'QR-a basyp uly ekranda görüň';
                 document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
-                document.getElementById('mGal').innerText = 'Galereýa';
+                document.getElementById('mGal').innerText        = 'Galereýa';
                 document.getElementById('mCam').innerText = 'Kamera';
                 document.getElementById('mRot').innerText = 'Öwr';
                 document.getElementById('mDel').innerText = 'Poz';
