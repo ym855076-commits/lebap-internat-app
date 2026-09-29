@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lebap Internat - Sign Language App</title>
-    <!-- Подключение полноценного манифеста для установки приложения -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f766e">
     <style>
@@ -161,25 +160,6 @@
         }
         .input-field:focus { border-color: #0d9488; }
         
-        .preview-container {
-            position: relative;
-            width: 100%;
-            height: 180px;
-            background: #f1f5f9;
-            border-radius: 12px;
-            display: none;
-            overflow: hidden;
-            border: 2px dashed #cbd5e1;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .preview-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
         .action-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -405,10 +385,6 @@
                     <span id="m3">🎮 Oýun we Barlag / Мини-игра и тест</span>
                     <span>➔</span>
                 </div>
-                <div class="menu-card" onclick="switchScreen('screenCreator')">
-                    <span id="m4">➕ Kartoçka döretmek / Создать карточку</span>
-                    <span>➔</span>
-                </div>
                 <div class="menu-card" onclick="switchScreen('screenTimer')">
                     <span id="m7">⏱️ Sapak wagty we Timer / Таймер уроков</span>
                     <span>➔</span>
@@ -426,12 +402,11 @@
             <!-- 2. АЛФАВИТ -->
             <div id="screenAlphabet" class="screen">
                 <div class="section-title" id="txtAlphaTitle">Türkmen Barmak Elipbiýi</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 4px 0; font-weight: 600;" id="txtAlphaHint">Harpa basyp uly ekranda görüň we sesli diňläň</p>
                 <input type="text" class="input-field" id="searchAlphaInput" placeholder="Harp gözle / Поиск буквы..." onkeyup="filterAlphabet(this.value)">
                 
                 <div class="grid-3" id="alphabetContainer"></div>
                 
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn1">⬅️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn1">⬅️️ Yzyna / Назад</button>
             </div>
 
             <!-- 3. АЛЬБОМ ЖЕСТОВ -->
@@ -478,41 +453,6 @@
                 <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn3">⬅️ Yzyna / Назад</button>
             </div>
 
-            <!-- 5. КОНСТРУКТОР КАРТОЧЕК -->
-            <div id="screenCreator" class="screen">
-                <div class="section-title" id="txtCreatorTitle">Kartoçka döretmek we Kamera</div>
-                <div class="card-box" style="flex-grow: 1;">
-                    <div class="action-row">
-                        <label class="btn" style="cursor: pointer; padding: 14px;">
-                            📁 <span id="lblGallery">Galereýa</span> 
-                            <input type="file" id="galleryInput" accept="image/*" style="display:none;" onchange="loadPhoto(event)">
-                        </label>
-                        <label class="btn btn-warning" style="cursor: pointer; padding: 14px;">
-                            📷 <span id="lblCamera">Kamera</span> 
-                            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="loadPhoto(event)">
-                        </label>
-                    </div>
-
-                    <div class="preview-container" id="previewBox" onclick="openZoom(imageElement.src)">
-                        <img id="cardImage" alt="Surat">
-                    </div>
-                    <p style="font-size: 9px; text-align: center; color: var(--text-muted); margin: 0;" id="txtZoomHint">Surata basyp uly ekranda görüň 🔍</p>
-
-                    <div class="action-row" id="imageControls" style="display: none;">
-                        <button class="btn btn-secondary" style="padding: 10px;" onclick="rotateImage()">🔄 <span id="lblRotate">Öwr (90°)</span></button>
-                        <button class="btn btn-danger" style="padding: 10px;" onclick="deleteImage()">❌ <span id="lblDelete">Aýyr</span></button>
-                    </div>
-
-                    <input type="text" id="cardTitle" class="input-field" placeholder="Söz ýa-da harp / Слово или буква...">
-                    
-                    <div class="action-row" style="margin-top: auto;">
-                        <button class="btn" style="padding: 12px;" onclick="saveCard()">💾 <span id="lblSave">Ýatda sakla</span></button>
-                        <button class="btn btn-warning" style="padding: 12px;" onclick="downloadCard()">📥 <span id="lblDownload">Ýükle</span></button>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn4">⬅️ Yzyna / Назад</button>
-            </div>
-
             <!-- 6. ТАЙМЕР И СЕКУНДОМЕР -->
             <div id="screenTimer" class="screen">
                 <div class="section-title" id="txtTimerTitle">Sapak wagty we Timer / Таймер уроков</div>
@@ -544,11 +484,6 @@
                 <div class="card-box" style="text-align: center; gap: 10px; padding: 16px; flex-grow: 1; justify-content: center; align-items: center;">
                     <h3 style="color: #047857; margin: 0; font-size: 18px;">Lebap Internat App</h3>
                     
-                    <div style="background: white; padding: 8px; border-radius: 12px; border: 2px solid #cbd5e1; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="openZoom('qrcode.png')">
-                        <img src="qrcode.png" alt="QR Kod" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    </div>
-                    <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;" id="txtQrHint">QR-a basyp uly ekranda görüň / Нажмите для увеличения</p>
-
                     <p style="font-size: 12px; color: var(--text-main); line-height: 1.4; margin: 0;" id="txtAboutDesc">
                         Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.
                     </p>
@@ -598,19 +533,16 @@
         </div>
     </div>
 
-    <!-- ЗУМ КАРТИНОК И QR -->
+    <!-- ЗУМ КАРТИНОК -->
     <div id="zoomModal" onclick="closeZoom()">
         <img id="zoomImage" src="" alt="Uly surat">
         <button class="close-zoom" onclick="closeZoom()">❌ Ýapmak / Закрыть</button>
     </div>
 
     <script>
-        // Регистрация Service Worker для работы оффлайн
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log("Service Worker registered!"))
-                    .catch((err) => console.log("Service Worker failed:", err));
+                navigator.serviceWorker.register('sw.js').catch(() => {});
             });
         }
 
@@ -687,10 +619,7 @@
             });
         }
 
-        let currentRotation = 0;
-        let imageElement = document.getElementById('cardImage');
         let currentLang = 'tk';
-
         const alphabetLetters = ['A', 'Ä', 'B', 'Ç', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'Ž', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ö', 'P', 'R', 'S', 'Ş', 'T', 'U', 'Ü', 'W', 'Ý', 'Y', 'Z'];
         let letterData = JSON.parse(localStorage.getItem('internatAlphabet') || '{}');
         
@@ -757,13 +686,11 @@
             activeKey = key;
             isAlphabetMode = isAlpha;
             document.getElementById('modalBigTitle').innerText = key;
-            
             speakText(key);
 
             const mImg = document.getElementById('modalImage');
             const mPlaceholder = document.getElementById('modalPlaceholder');
             const mControls = document.getElementById('modalControls');
-
             let currentStore = isAlpha ? letterData : gestureData;
 
             if (currentStore[key] && currentStore[key].img) {
@@ -842,7 +769,6 @@
                 openCategory(activeCategoryName);
             }
             closeLetterModal();
-            alert(currentLang === 'tk' ? "Üstünlikli ýatda saklanyldy! ✅" : "Успешно сохранено! ✅");
         }
 
         function switchScreen(screenId) {
@@ -873,16 +799,13 @@
                 document.getElementById('m1').innerText = '📖 Туркменский дактильный алфавит (А-Z)';
                 document.getElementById('m2').innerText = '📚 Альбом жестов и словарь';
                 document.getElementById('m3').innerText = '🎮 Мини-игра и тестирование';
-                document.getElementById('m4').innerText = '➕ Создать карточку и камера';
                 document.getElementById('m5').innerText = 'ℹ️ О программе';
                 document.getElementById('m6').innerText = '🗺️ Карта и школа';
                 document.getElementById('m7').innerText = '⏱️ Таймер уроков';
                 document.getElementById('txtAlphaTitle').innerText = 'Туркменский дактильный алфавит';
-                document.getElementById('txtAlphaHint').innerText = 'Нажмите на букву для просмотра и озвучивания';
                 document.getElementById('searchAlphaInput').placeholder = 'Поиск буквы...';
                 document.getElementById('searchDictInput').placeholder = 'Поиск слова...';
                 document.getElementById('txtDictTitle').innerText = 'Альбом жестов';
-                document.getElementById('txtCreatorTitle').innerText = 'Конструктор карточек и камера';
                 document.getElementById('txtMapTitle').innerText = 'Карта Туркменабата и школы';
                 document.getElementById('txtMapSub').innerText = 'Город Туркменабат • Территория школы';
                 document.getElementById('txtTimerTitle').innerText = 'Таймер уроков и секундомер';
@@ -892,14 +815,7 @@
                 document.getElementById('btnStart').innerText = 'Старт';
                 document.getElementById('btnPause').innerText = 'Пауза';
                 document.getElementById('btnReset').innerText = 'Сброс';
-                document.getElementById('lblGallery').innerText = 'Галерея';
-                document.getElementById('lblCamera').innerText = 'Камера';
-                document.getElementById('lblRotate').innerText = 'Поворот (90°)';
-                document.getElementById('lblDelete').innerText = 'Удалить';
-                document.getElementById('lblSave').innerText = 'Сохранить';
-                document.getElementById('lblDownload').innerText = 'Скачать';
                 document.getElementById('txtAboutTitle').innerText = 'О программе';
-                document.getElementById('txtQrHint').innerText = 'Нажмите для увеличения';
                 document.getElementById('txtAboutDesc').innerText = 'Это интерактивное учебное пособие разработано специально для учеников специальной общеобразовательной школы-интерната №5 Лебапского велаята.';
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
                 document.getElementById('mGal').innerText = 'Галерея';
@@ -918,16 +834,13 @@
                 document.getElementById('m1').innerText = '📖 Türkmen Barmak Elipbiýi (A-Z)';
                 document.getElementById('m2').innerText = '📚 Žestler Albomy we Sözlük';
                 document.getElementById('m3').innerText = '🎮 Oýun we Barlag (Quiz & Test)';
-                document.getElementById('m4').innerText = '➕ Täze Kartoçka Goşmak we Kamera';
                 document.getElementById('m5').innerText = 'ℹ️ Programma barada';
                 document.getElementById('m6').innerText = '🗺️ Mekdebiň ýeri we Karta';
                 document.getElementById('m7').innerText = '⏱️ Sapak wagty we Timer';
                 document.getElementById('txtAlphaTitle').innerText = 'Türkmen Barmak Elipbiýi';
-                document.getElementById('txtAlphaHint').innerText = 'Harpa basyp uly ekranda görüň we sesli diňläň';
                 document.getElementById('searchAlphaInput').placeholder = 'Harp gözle...';
                 document.getElementById('searchDictInput').placeholder = 'Söz gözle...';
                 document.getElementById('txtDictTitle').innerText = 'Žestler Albomy';
-                document.getElementById('txtCreatorTitle').innerText = 'Kartoçka Döretmek we Kamera';
                 document.getElementById('txtMapTitle').innerText = 'Türkmenabat şäheriniň karty';
                 document.getElementById('txtMapSub').innerText = 'Türkmenabat şäheri • Mekdep töweregi';
                 document.getElementById('txtTimerTitle').innerText = 'Sapak wagty we Timer';
@@ -937,17 +850,10 @@
                 document.getElementById('btnStart').innerText = 'Başla';
                 document.getElementById('btnPause').innerText = 'Durandyr';
                 document.getElementById('btnReset').innerText = 'Täzeden başla';
-                document.getElementById('lblGallery').innerText = 'Galereýa';
-                document.getElementById('lblCamera').innerText = 'Kamera';
-                document.getElementById('lblRotate').innerText = 'Öwr (90°)';
-                document.getElementById('lblDelete').innerText = 'Aýyr';
-                document.getElementById('lblSave').innerText = 'Ýatda sakla';
-                document.getElementById('lblDownload').innerText = 'Ýükle';
                 document.getElementById('txtAboutTitle').innerText = 'Programma barada';
-                document.getElementById('txtQrHint').innerText = 'QR-a basyp uly ekranda görüň';
                 document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
                 document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
-                document.getElementById('mGal').innerText        = 'Galereýa';
+                document.getElementById('mGal').innerText = 'Galereýa';
                 document.getElementById('mCam').innerText = 'Kamera';
                 document.getElementById('mRot').innerText = 'Öwr';
                 document.getElementById('mDel').innerText = 'Poz';
@@ -955,56 +861,6 @@
                 document.getElementById('mClose').innerText = 'Çykmak';
                 document.querySelectorAll('[id^="backBtn"]').forEach(btn => btn.innerText = '⬅️ Yzyna gaýt');
             }
-        }
-
-        function loadPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imageElement.src = e.target.result;
-                    currentRotation = 0;
-                    imageElement.style.transform = `rotate(0deg)`;
-                    document.getElementById('previewBox').style.display = 'flex';
-                    document.getElementById('imageControls').style.display = 'grid';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function rotateImage() {
-            currentRotation = (currentRotation + 90) % 360;
-            imageElement.style.transform = `rotate(${currentRotation}deg)`;
-        }
-
-        function deleteImage() {
-            imageElement.src = '';
-            document.getElementById('previewBox').style.display = 'none';
-            document.getElementById('imageControls').style.display = 'none';
-            document.getElementById('galleryInput').value = '';
-            document.getElementById('cameraInput').value = '';
-        }
-
-        function saveCard() {
-            const title = document.getElementById('cardTitle').value;
-            if(!title) {
-                alert(currentLang === 'tk' ? "Sözüň adyny ýazyň!" : "Введите название слова/буквы!");
-                return;
-            }
-            alert(currentLang === 'tk' ? "Kartoçka üstünlikli ýatda saklanyldy! ✅" : "Карточка успешно сохранена! ✅");
-            document.getElementById('cardTitle').value = '';
-            deleteImage();
-        }
-
-        function downloadCard() {
-            if(!imageElement.src) {
-                alert(currentLang === 'tk' ? "Ilki bilen surat saýlaň ýa-da alyn!" : "Сначала выберите или сделайте фото!");
-                return;
-            }
-            const link = document.createElement('a');
-            link.download = 'turkmen-jest-kartoçka.png';
-            link.href = imageElement.src;
-            link.click();
         }
 
         function speakText(text) {
@@ -1036,6 +892,5 @@
             renderAlphabetGrid();
         }
     </script>
-
 </body>
 </html>
