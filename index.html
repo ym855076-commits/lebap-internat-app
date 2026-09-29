@@ -34,6 +34,7 @@
         .app-container {
             width: 100%;
             height: 100%;
+            max-width: none; /* Убрано ограничение ширины, чтобы приложение было широким */
             background: #f1f5f9;
             display: flex;
             flex-direction: column;
@@ -41,7 +42,7 @@
         }
         .header {
             background: #ffffff;
-            padding: 12px 16px;
+            padding: 12px 20px;
             text-align: center;
             border-bottom: 2px solid #cbd5e1;
             position: relative;
@@ -49,21 +50,21 @@
             flex-shrink: 0;
         }
         .header h2 {
-            font-size: 15px;
+            font-size: 18px;
             color: #065f46;
             margin: 0 0 2px 0;
             line-height: 1.2;
             font-weight: 800;
         }
         .header p {
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-muted);
             margin: 0;
             font-weight: 600;
         }
         .header-top-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 4px;
         }
@@ -72,35 +73,24 @@
             font-weight: bold;
             color: #0f766e;
             background: #f0fdf4;
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 8px;
             border: 1px solid #bbf7d0;
             cursor: pointer;
         }
         .author-tag {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: #047857;
             background: #ecfdf5;
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 10px;
             display: inline-block;
-            margin-top: 3px;
+            margin-top: 4px;
             border: 1px solid #a7f3d0;
         }
-        .lang-switcher {
-            background: #0f766e;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
         .content {
-            padding: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 14px;
@@ -108,7 +98,7 @@
             overflow-y: auto;
         }
         .section-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 800;
             color: #1e293b;
             margin-bottom: 6px;
@@ -120,7 +110,7 @@
             background: white;
             border: 2px solid #cbd5e1;
             border-radius: 16px;
-            padding: 14px 20px;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -129,11 +119,11 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.04);
         }
         .menu-card:hover { border-color: #0d9488; background: #f8fafc; }
-        .menu-card:active { transform: scale(0.98); }
+        .menu-card:active { transform: scale(0.99); }
         .menu-card span {
             font-weight: 700;
             color: #0f766e;
-            font-size: 14px;
+            font-size: 15px;
         }
         .screen { display: none; }
         .screen.active { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
@@ -141,11 +131,11 @@
         .card-box {
             background: white;
             border-radius: 18px;
-            padding: 16px;
+            padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             border: 1px solid #e2e8f0;
         }
         .input-field {
@@ -190,8 +180,8 @@
         
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
             flex-grow: 1;
             overflow-y: auto;
             padding-bottom: 10px;
@@ -208,13 +198,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 85px;
+            min-height: 95px;
             transition: transform 0.1s;
         }
         .grid-item:active { transform: scale(0.96); }
         .grid-item img {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             object-fit: cover;
             border-radius: 6px;
             margin-bottom: 4px;
@@ -223,7 +213,7 @@
         
         .categories-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 8px;
             margin-bottom: 6px;
         }
@@ -258,7 +248,7 @@
         .modal-box {
             background: white;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             height: 90vh;
             padding: 20px;
             border-radius: 28px;
@@ -346,7 +336,7 @@
             text-align: center;
             font-size: 11px;
             color: #64748b;
-            padding: 6px;
+            padding: 8px;
             background: #ffffff;
             border-top: 1px solid #e2e8f0;
             font-weight: 600;
@@ -360,68 +350,67 @@
         <div class="header">
             <div class="header-top-row">
                 <div class="live-clock" id="liveClock" onclick="switchScreen('screenTimer')">⏱️ 00:00:00</div>
-                <button class="lang-switcher" onclick="toggleLanguage()" id="langBtn">🇷🇺 RU / 🇹🇲 TK</button>
             </div>
-            <h2 id="txtHeaderTitle">Lebap welaýatynyň 5-nji mekdep-internaty</h2>
-            <p id="txtHeaderSub">Ker we çala eşidýän çagalar üçin interaktiw esbap</p>
-            <div class="author-tag" id="txtAuthorTag">👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)</div>
+            <h2>Lebap welaýatynyň 5-nji mekdep-internaty</h2>
+            <p>Ker we çala eşidýän çagalar üçin interaktiw esbap</p>
+            <div class="author-tag">👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)</div>
         </div>
 
         <div class="content">
 
             <!-- 1. ГЛАВНОЕ МЕНЮ -->
             <div id="screenHome" class="screen active">
-                <div class="section-title" id="txtMenuTitle">Esasy Bölümler / Основные разделы</div>
+                <div class="section-title">Esasy Bölümler</div>
                 
                 <div class="menu-card" onclick="switchScreen('screenAlphabet')">
-                    <span id="m1">📖 Türkmen Barmak Elipbiýi (A-Z)</span>
+                    <span>📖 Türkmen Barmak Elipbiýi (A-Z)</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenDictionary')">
-                    <span id="m2">📚 Žestler Albomy we Sözlük</span>
+                    <span>📚 Žestler Albomy we Sözlük</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenGame')">
-                    <span id="m3">🎮 Oýun we Barlag / Мини-игра и тест</span>
+                    <span>🎮 Oýun we Barlag / Test</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenTimer')">
-                    <span id="m7">⏱️ Sapak wagty we Timer / Таймер уроков</span>
+                    <span>⏱️ Sapak wagty we Timer</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenMap')">
-                    <span id="m6">🗺️ Mekdebiň ýeri / Карта и школа</span>
+                    <span>🗺️ Mekdebiň ýeri we Karta</span>
                     <span>➔</span>
                 </div>
                 <div class="menu-card" onclick="switchScreen('screenAbout')">
-                    <span id="m5">ℹ️ Programma barada / О программе</span>
+                    <span>ℹ️ Programma barada</span>
                     <span>➔</span>
                 </div>
             </div>
 
             <!-- 2. АЛФАВИТ -->
             <div id="screenAlphabet" class="screen">
-                <div class="section-title" id="txtAlphaTitle">Türkmen Barmak Elipbiýi</div>
-                <input type="text" class="input-field" id="searchAlphaInput" placeholder="Harp gözle / Поиск буквы..." onkeyup="filterAlphabet(this.value)">
+                <div class="section-title">Türkmen Barmak Elipbiýi</div>
+                <input type="text" class="input-field" id="searchAlphaInput" placeholder="Harp gözle..." onkeyup="filterAlphabet(this.value)">
                 
                 <div class="grid-3" id="alphabetContainer"></div>
                 
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn1">⬅️️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅ Yzyna gaýt</button>
             </div>
 
             <!-- 3. АЛЬБОМ ЖЕСТОВ -->
             <div id="screenDictionary" class="screen">
-                <div class="section-title" id="txtDictTitle">Žestler Albomy / Альбом жестов</div>
-                <input type="text" class="input-field" id="searchDictInput" placeholder="Söz gözle / Поиск слова..." onkeyup="filterDictionary(this.value)" style="margin-bottom: 4px;">
+                <div class="section-title">Žestler Albomy</div>
+                <input type="text" class="input-field" id="searchDictInput" placeholder="Söz gözle..." onkeyup="filterDictionary(this.value)" style="margin-bottom: 4px;">
                 
                 <div class="categories-grid">
                     <button class="btn btn-blue" onclick="openCategory('Mekdep')">🏫 Mekdep</button>
                     <button class="btn btn-blue" onclick="openCategory('Maşgala')">👨‍👩‍👧‍👦 Maşgala</button>
-                    <button class="btn btn-blue" onclick="openCategory('Adam')">👤 Kim men / Человек</button>
-                    <button class="btn btn-blue" onclick="openCategory('Yurt')">🌍 Bizň ýurt / Страна</button>
+                    <button class="btn btn-blue" onclick="openCategory('Adam')">👤 Kim men</button>
+                    <button class="btn btn-blue" onclick="openCategory('Yurt')">🌍 Bizň ýurt</button>
                     <button class="btn btn-blue" onclick="openCategory('Saglyk')">💊 Saglyk</button>
                     <button class="btn btn-blue" onclick="openCategory('Duygular')">❤️ Duýgular</button>
-                    <button class="btn btn-blue" onclick="openCategory('Hereketler')" style="grid-column: span 2;">🏃 Hereketler / Действия</button>
+                    <button class="btn btn-blue" onclick="openCategory('Hereketler')" style="grid-column: span 2;">🏃 Hereketler</button>
                 </div>
 
                 <div class="card-box" style="padding: 6px; text-align: center; background: #e2e8f0; margin-bottom: 2px;">
@@ -430,16 +419,16 @@
 
                 <div class="grid-3" id="categoryItemsContainer"></div>
 
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn2">⬅️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅️ Yzyna gaýt</button>
             </div>
 
             <!-- 4. ИГРА И МИНИ-ТЕСТ -->
             <div id="screenGame" class="screen">
-                <div class="section-title" id="txtGameTitle">Barlag Testi we Oýun / Мини-игра</div>
+                <div class="section-title">Barlag Testi we Oýun</div>
                 <div class="card-box" style="text-align: center; padding: 20px; gap: 12px; flex-grow: 1; justify-content: center;">
                     <div class="score-circle">
                         <h1 id="scoreValue">100</h1>
-                        <p id="txtScoreLabel">Bal / Очки</p>
+                        <p>Bal / Очки</p>
                     </div>
                     
                     <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 14px; padding: 10px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
@@ -448,51 +437,51 @@
 
                     <div id="gameOptionsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
                     
-                    <button class="btn btn-warning" style="padding: 8px; font-size: 12px;" onclick="nextGameQuestion()">🔄 <span id="txtNextQ">Başga sorag / Следующий вопрос</span></button>
+                    <button class="btn btn-warning" style="padding: 8px; font-size: 12px;" onclick="nextGameQuestion()">🔄 Başga sorag</button>
                 </div>
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn3">⬅️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅️ Yzyna gaýt</button>
             </div>
 
             <!-- 6. ТАЙМЕР И СЕКУНДОМЕР -->
             <div id="screenTimer" class="screen">
-                <div class="section-title" id="txtTimerTitle">Sapak wagty we Timer / Таймер уроков</div>
+                <div class="section-title">Sapak wagty we Timer</div>
                 <div class="card-box" style="text-align: center; gap: 15px; padding: 25px; flex-grow: 1; justify-content: center;">
                     <div id="stopwatchDisplay" style="font-size: 42px; font-weight: 800; color: #047857; font-family: monospace;">00:00</div>
-                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;" id="txtTimerSub">Sapakda ýaryşmak ýa-da wagt barlamak üçin / Для заданий на уроке</p>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Sapakda ýaryşmak ýa-da wagt barlamak üçin</p>
                     <div class="action-row">
-                        <button class="btn" style="padding: 12px;" onclick="startStopwatch()">▶️ <span id="btnStart">Başla</span></button>
-                        <button class="btn btn-warning" style="padding: 12px;" onclick="pauseStopwatch()">⏸️ <span id="btnPause">Durandyr</span></button>
-                        <button class="btn btn-danger" style="padding: 12px; grid-column: span 2;" onclick="resetStopwatch()">🔄 <span id="btnReset">Täzeden başla</span></button>
+                        <button class="btn" style="padding: 12px;" onclick="startStopwatch()">▶ Başla</button>
+                        <button class="btn btn-warning" style="padding: 12px;" onclick="pauseStopwatch()">⏸️ Durandyr</button>
+                        <button class="btn btn-danger" style="padding: 12px; grid-column: span 2;" onclick="resetStopwatch()">🔄 Täzeden başla</button>
                     </div>
                 </div>
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn7">⬅️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅️ Yzyna gaýt</button>
             </div>
 
             <!-- 7. КАРТА -->
             <div id="screenMap" class="screen">
-                <div class="section-title" id="txtMapTitle">Mekdebiň ýerleşýän ýeri / Карта и школа</div>
+                <div class="section-title">Mekdebiň ýerleşýän ýeri</div>
                 <div class="map-container">
                     <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=63.565%2C39.105%2C63.595%2C39.125&amp;layer=mapnik" style="border: 0"></iframe>
                 </div>
-                <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin: 0;" id="txtMapSub">Türkmenabat şäheri • Mekdep töweregi</p>
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn6">⬅️ Yzyna / Назад</button>
+                <p style="font-size: 11px; text-align: center; color: var(--text-muted); margin: 0;">Türkmenabat şäheri • Mekdep töweregi</p>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅️ Yzyna gaýt</button>
             </div>
 
             <!-- 8. О ПРОГРАММЕ -->
             <div id="screenAbout" class="screen">
-                <div class="section-title" id="txtAboutTitle">Programma barada / О программе</div>
+                <div class="section-title">Programma barada</div>
                 <div class="card-box" style="text-align: center; gap: 10px; padding: 16px; flex-grow: 1; justify-content: center; align-items: center;">
                     <h3 style="color: #047857; margin: 0; font-size: 18px;">Lebap Internat App</h3>
                     
-                    <p style="font-size: 12px; color: var(--text-main); line-height: 1.4; margin: 0;" id="txtAboutDesc">
+                    <p style="font-size: 12px; color: var(--text-main); line-height: 1.4; margin: 0;">
                         Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.
                     </p>
                     <div style="background: var(--accent-light); padding: 10px; border-radius: 12px; border: 2px solid #a7f3d0; width: 100%;">
-                        <p style="margin: 0; font-size: 12px; font-weight: 800; color: #065f46;" id="txtAuthorName">👨‍🏫 Awtor / Автор: Mürzaew Ýusup (Terbiýeçi / Воспитатель)</p>
+                        <p style="margin: 0; font-size: 12px; font-weight: 800; color: #065f46;">👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)</p>
                     </div>
                     <p style="font-size: 10px; color: var(--text-muted); margin: 0; font-weight: 600;">Lebap Techno Hub • 2026</p>
                 </div>
-                <button class="btn btn-secondary" onclick="switchScreen('screenHome')" id="backBtn5">⬅️ Yzyna / Назад</button>
+                <button class="btn btn-secondary" onclick="switchScreen('screenHome')">⬅️ Yzyna gaýt</button>
             </div>
 
         </div>
@@ -514,21 +503,21 @@
 
             <div class="action-row">
                 <label class="btn" style="cursor: pointer; padding: 12px; font-size: 13px;">
-                    📁 <span id="mGal">Galereýa</span> <input type="file" accept="image/*" style="display:none;" onchange="loadModalPhoto(event)">
+                    📁 Galereýa <input type="file" accept="image/*" style="display:none;" onchange="loadModalPhoto(event)">
                 </label>
                 <label class="btn btn-warning" style="cursor: pointer; padding: 12px; font-size: 13px;">
-                    📷 <span id="mCam">Kamera</span> <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="loadModalPhoto(event)">
+                    📷 Kamera <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="loadModalPhoto(event)">
                 </label>
             </div>
 
             <div class="action-row" id="modalControls" style="display: none;">
-                <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="rotateModalImage()">🔄 <span id="mRot">Öwr</span></button>
-                <button class="btn btn-danger" style="padding: 10px; font-size: 13px;" onclick="deleteModalImage()">❌ <span id="mDel">Poz</span></button>
+                <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="rotateModalImage()">🔄 Öwr</button>
+                <button class="btn btn-danger" style="padding: 10px; font-size: 13px;" onclick="deleteModalImage()">❌ Poz</button>
             </div>
 
             <div class="action-row">
-                <button class="btn" style="padding: 12px; font-size: 13px;" onclick="saveModalData()">💾 <span id="mSave">Sakla</span></button>
-                <button class="btn btn-secondary" style="padding: 12px; font-size: 13px;" onclick="closeLetterModal()">❌ <span id="mClose">Çykmak</span></button>
+                <button class="btn" style="padding: 12px; font-size: 13px;" onclick="saveModalData()">💾 Sakla</button>
+                <button class="btn btn-secondary" style="padding: 12px; font-size: 13px;" onclick="closeLetterModal()">❌ Çykmak</button>
             </div>
         </div>
     </div>
@@ -539,7 +528,9 @@
         <button class="close-zoom" onclick="closeZoom()">❌ Ýapmak / Закрыть</button>
     </div>
 
+    <!-- СКРИПТ-КОД И СЕРВИС-ВОРКЕР -->
     <script>
+        // Регистрация Service Worker для PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js').catch(() => {});
@@ -585,7 +576,7 @@
         function nextGameQuestion() {
             const allKeys = [...alphabetLetters, ...Object.values(categoriesData).flat()];
             const randomKey = allKeys[Math.floor(Math.random() * allKeys.length)];
-            document.getElementById('gameQuestionText').innerText = (currentLang === 'tk' ? "Bu sözüň / harpyň manysyny tap: " : "Найдите значение: ") + randomKey;
+            document.getElementById('gameQuestionText').innerText = "Bu sözüň / harpyň manysyny tap: " + randomKey;
             
             const optionsContainer = document.getElementById('gameOptionsContainer');
             optionsContainer.innerHTML = '';
@@ -606,10 +597,10 @@
                 btn.onclick = () => {
                     if(opt === randomKey) {
                         score += 10;
-                        alert(currentLang === 'tk' ? "Dogry! Ajaýyp! +10 bal 🌟" : "Правильно! Отлично! +10 очков 🌟");
+                        alert("Dogry! Ajaýyp! +10 bal 🌟");
                     } else {
                         score = Math.max(0, score - 5);
-                        alert(currentLang === 'tk' ? "Ýalňyş! Synanyşyp gör ❌" : "Неправильно! Попробуйте еще ❌");
+                        alert("Ýalňyş! Synanyşyp gör ❌");
                     }
                     localStorage.setItem('internatScore', score);
                     document.getElementById('scoreValue').innerText = score;
@@ -619,18 +610,17 @@
             });
         }
 
-        let currentLang = 'tk';
         const alphabetLetters = ['A', 'Ä', 'B', 'Ç', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'Ž', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ö', 'P', 'R', 'S', 'Ş', 'T', 'U', 'Ü', 'W', 'Ý', 'Y', 'Z'];
         let letterData = JSON.parse(localStorage.getItem('internatAlphabet') || '{}');
         
         const categoriesData = {
-            'Mekdep': ['Mugallym / Учитель', 'Direktor / Директор', 'Klas / Класс', 'Urok / Урок', 'Kitap / Книга', 'Oкуwчы / Ученик'],
-            'Maşgala': ['Ata / Отец', 'Eje / Мать', 'Aýal / Жена', 'Dogan / Сестра', 'Çaga / Ребенок', 'Agyz / Семья'],
-            'Adam': ['Men / Я', 'Adam / Человек', 'Erkek / Мужчина', 'Aýal / Женщина', 'Gyz / Девочка', 'Oglan / Мальчик'],
-            'Yurt': ['Watan / Родина', 'Şäher / Город', 'Oba / Деревня', 'Köçe / Улица', 'Baştutan / Президент'],
-            'Saglyk': ['Saglyk / Здоровье', 'Hassahana / Больница', 'Derman / Лекарство', 'Lukman / Врач', 'Agyrýar / Болит'],
-            'Duygular': ['Gowy / Хорошо', 'Erbet / Плохо', 'Begenmek / Радость', 'Gaharlanmak / Злость', 'Utanmak / Стыд'],
-            'Hereketler': ['Okamak / Читать', 'Ýazmak / Писать', 'Görmek / Видеть', 'Eşitmek / Слышать', 'Içmek / Пить', 'Iýmek / Есть']
+            'Mekdep': ['Mugallym', 'Direktor', 'Klas', 'Urok', 'Kitap', 'Okuwçu'],
+            'Maşgala': ['Ata', 'Eje', 'Aýal', 'Dogan', 'Çaga', 'Maşgala'],
+            'Adam': ['Men', 'Adam', 'Erkek', 'Aýal', 'Gyz', 'Oglan'],
+            'Yurt': ['Watan', 'Şäher', 'Oba', 'Köçe', 'Prezident'],
+            'Saglyk': ['Saglyk', 'Hassahana', 'Derman', 'Lukman', 'Agyrýar'],
+            'Duygular': ['Gowy', 'Erbet', 'Begenmek', 'Gaharlanmak', 'Utanmak'],
+            'Hereketler': ['Okamak', 'Ýazmak', 'Görmek', 'Eşitmek', 'Içmek', 'Iýmek']
         };
         let gestureData = JSON.parse(localStorage.getItem('internatGestures') || '{}');
 
@@ -675,7 +665,7 @@
                     const item = document.createElement('div');
                     item.className = 'grid-item';
                     const savedImg = gestureData[word] ? `<img src="${gestureData[word].img}" style="transform: rotate(${gestureData[word].rot || 0}deg);">` : '';
-                    item.innerHTML = `${savedImg}<span style="font-size:11px; line-height:1.2; font-weight:700;">${word}</span>`;
+                    item.innerHTML = `${savedImg}<span style="font-size:12px; line-height:1.2; font-weight:700;">${word}</span>`;
                     item.onclick = () => openModal(word, false);
                     container.appendChild(item);
                 });
@@ -783,91 +773,11 @@
             }
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'tk' ? 'ru' : 'tk';
-            updateTexts();
-            renderAlphabetGrid();
-        }
-
-        function updateTexts() {
-            if (currentLang === 'ru') {
-                document.getElementById('langBtn').innerText = '🇹🇲 TK / 🇷🇺 RU';
-                document.getElementById('txtHeaderTitle').innerText = 'Спец. школа-интернат №5 Лебапского велаята';
-                document.getElementById('txtHeaderSub').innerText = 'Интерактивное пособие для глухих и слабослышащих';
-                document.getElementById('txtAuthorTag').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
-                document.getElementById('txtMenuTitle').innerText = 'Основные разделы';
-                document.getElementById('m1').innerText = '📖 Туркменский дактильный алфавит (А-Z)';
-                document.getElementById('m2').innerText = '📚 Альбом жестов и словарь';
-                document.getElementById('m3').innerText = '🎮 Мини-игра и тестирование';
-                document.getElementById('m5').innerText = 'ℹ️ О программе';
-                document.getElementById('m6').innerText = '🗺️ Карта и школа';
-                document.getElementById('m7').innerText = '⏱️ Таймер уроков';
-                document.getElementById('txtAlphaTitle').innerText = 'Туркменский дактильный алфавит';
-                document.getElementById('searchAlphaInput').placeholder = 'Поиск буквы...';
-                document.getElementById('searchDictInput').placeholder = 'Поиск слова...';
-                document.getElementById('txtDictTitle').innerText = 'Альбом жестов';
-                document.getElementById('txtMapTitle').innerText = 'Карта Туркменабата и школы';
-                document.getElementById('txtMapSub').innerText = 'Город Туркменабат • Территория школы';
-                document.getElementById('txtTimerTitle').innerText = 'Таймер уроков и секундомер';
-                document.getElementById('txtTimerSub').innerText = 'Для заданий и соревнований на уроке';
-                document.getElementById('txtGameTitle').innerText = 'Мини-игра и тест';
-                document.getElementById('txtNextQ').innerText = 'Следующий вопрос';
-                document.getElementById('btnStart').innerText = 'Старт';
-                document.getElementById('btnPause').innerText = 'Пауза';
-                document.getElementById('btnReset').innerText = 'Сброс';
-                document.getElementById('txtAboutTitle').innerText = 'О программе';
-                document.getElementById('txtAboutDesc').innerText = 'Это интерактивное учебное пособие разработано специально для учеников специальной общеобразовательной школы-интерната №5 Лебапского велаята.';
-                document.getElementById('txtAuthorName').innerText = '👨‍🏫 Автор: Мурзаев Юсуп (Воспитатель)';
-                document.getElementById('mGal').innerText = 'Галерея';
-                document.getElementById('mCam').innerText = 'Камера';
-                document.getElementById('mRot').innerText = 'Поворот';
-                document.getElementById('mDel').innerText = 'Удалить';
-                document.getElementById('mSave').innerText = 'Сохранить';
-                document.getElementById('mClose').innerText = 'Закрыть';
-                document.querySelectorAll('[id^="backBtn"]').forEach(btn => btn.innerText = '⬅️ Назад');
-            } else {
-                document.getElementById('langBtn').innerText = '🇷🇺 RU / 🇹🇲 TK';
-                document.getElementById('txtHeaderTitle').innerText = "Lebap welaýatynyň 5-nji mekdep-internaty";
-                document.getElementById('txtHeaderSub').innerText = "Ker we çala eşidýän çagalar üçin interaktiw esbap";
-                document.getElementById('txtAuthorTag').innerText = "👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)";
-                document.getElementById('txtMenuTitle').innerText = 'Esasy Bölümler';
-                document.getElementById('m1').innerText = '📖 Türkmen Barmak Elipbiýi (A-Z)';
-                document.getElementById('m2').innerText = '📚 Žestler Albomy we Sözlük';
-                document.getElementById('m3').innerText = '🎮 Oýun we Barlag (Quiz & Test)';
-                document.getElementById('m5').innerText = 'ℹ️ Programma barada';
-                document.getElementById('m6').innerText = '🗺️ Mekdebiň ýeri we Karta';
-                document.getElementById('m7').innerText = '⏱️ Sapak wagty we Timer';
-                document.getElementById('txtAlphaTitle').innerText = 'Türkmen Barmak Elipbiýi';
-                document.getElementById('searchAlphaInput').placeholder = 'Harp gözle...';
-                document.getElementById('searchDictInput').placeholder = 'Söz gözle...';
-                document.getElementById('txtDictTitle').innerText = 'Žestler Albomy';
-                document.getElementById('txtMapTitle').innerText = 'Türkmenabat şäheriniň karty';
-                document.getElementById('txtMapSub').innerText = 'Türkmenabat şäheri • Mekdep töweregi';
-                document.getElementById('txtTimerTitle').innerText = 'Sapak wagty we Timer';
-                document.getElementById('txtTimerSub').innerText = 'Sapakda ýaryşmak ýa-da wagt barlamak üçin';
-                document.getElementById('txtGameTitle').innerText = 'Barlag Testi we Oýun';
-                document.getElementById('txtNextQ').innerText = 'Başga sorag';
-                document.getElementById('btnStart').innerText = 'Başla';
-                document.getElementById('btnPause').innerText = 'Durandyr';
-                document.getElementById('btnReset').innerText = 'Täzeden başla';
-                document.getElementById('txtAboutTitle').innerText = 'Programma barada';
-                document.getElementById('txtAboutDesc').innerText = "Bu interaktiw okuw esbaby Türkmenistanyň Lebap welaýatynyň 5-nji çagalar ýörite ümumydilim berýän mekdep-internatynyň okuwçylary üçin ýörite döredildi.";
-                document.getElementById('txtAuthorName').innerText = '👨‍🏫 Awtor: Mürzaew Ýusup (Terbiýeçi)';
-                document.getElementById('mGal').innerText = 'Galereýa';
-                document.getElementById('mCam').innerText = 'Kamera';
-                document.getElementById('mRot').innerText = 'Öwr';
-                document.getElementById('mDel').innerText = 'Poz';
-                document.getElementById('mSave').innerText = 'Sakla';
-                document.getElementById('mClose').innerText = 'Çykmak';
-                document.querySelectorAll('[id^="backBtn"]').forEach(btn => btn.innerText = '⬅️ Yzyna gaýt');
-            }
-        }
-
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 const cleanText = text.split('/')[0].trim();
                 const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = currentLang === 'tk' ? 'tk-TM' : 'ru-RU';
+                utterance.lang = 'tk-TM';
                 window.speechSynthesis.speak(utterance);
             }
         }
